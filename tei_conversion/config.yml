@@ -1,0 +1,32 @@
+# -----------------------------------------------------------
+# Code by: Kelly Christensen
+# Dirty hack: Simon Gabay (sorry Kelly)
+# YAML script to customize the path to XML-ALTO files and the project's publication information.
+# -----------------------------------------------------------
+
+data:
+  # specify the relative path of your data files
+  path: "./books_1"
+
+responsibility:
+  text: "Transformation from ALTO4 to TEI by"
+  # create a dictionary for each contributor in your project, featuring
+  # their first name (forename), last name (surname), and ORCID (ptr)
+  # example: {"forename":"Kelly",
+  #           "surname":"Christensen",
+  #           "ptr":{"type":"orcid","target":"000000027236874X"}}
+  resp:
+    [
+      {
+        "forename": "Simon",
+        "surname": "Gabay",
+        "ptr": { "type": "orcid", "target": "0000000190944475" },
+      },
+    ]
+  # name the publisher of this digital edition (project name)
+  publisher: "University of Geneva"
+  # name which authority finances or supports the project
+  authority: "University of Geneva"
+  # specify the edition's availability to the public/licencing
+  availability: { "status": "restricted", "n": "cc-by" }
+  licence: { "target": "https://creativecommons.org/licenses/by/4.0/" }
