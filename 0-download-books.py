@@ -251,10 +251,10 @@ def download_books(output_folder, urls):
 
     return 200
 
-def get_books_urls(input_metadata, column, sep="\t"):
+def get_books_urls(input_metadata, column):
     # extract the last token of each line as URL except first line
     with open(input_metadata, 'r') as metadata_file:
-        urls = list(set([line.split(sep)[column] for line in metadata_file.readlines()[1:]]))
+        urls = list(set([line.split()[column] for line in metadata_file.readlines()[1:]]))
     return urls
 
 parser = argparse.ArgumentParser(description='Download books from a metadata file.')
