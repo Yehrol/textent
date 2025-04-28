@@ -55,10 +55,6 @@ for line in lines:
         i += 1
         l2t_lines.append(newline)
 
-    
-
-#pprint.pp(l2t_lines[0:10])
-
 
 with open(args.output, 'w', encoding='utf-8') as f:
     f.write("file_name	number	title	date	publisher\n")
