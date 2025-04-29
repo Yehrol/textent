@@ -1,10 +1,10 @@
 #!/bin/sh
 
-#SBATCH --constraint=EPYC-7742
 #SBATCH --job-name=ocr
 #SBATCH --output=output.o%j
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
+#SBATCH --mem=20G
 #SBATCH --partition=shared-cpu
 #SBATCH --time=10:00:00
 #SBATCH --array=1-3
