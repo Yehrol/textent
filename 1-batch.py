@@ -1,7 +1,6 @@
 import argparse
 import os
 import shutil
-from math import ceil
 from glob import glob
 
 def split_dir_into_batches(input_dir, output_dir, nb_batches):
@@ -13,19 +12,16 @@ def split_dir_into_batches(input_dir, output_dir, nb_batches):
 
 	subdir = glob(os.path.join(input_dir, '*'))
 
-	batch_size = ceil(len(subdir) / nb_batches)
+	for i in range(len(subdir)):
+		batch = i % nb_batches + 1
 
-	for i in range(nb_batches):
-		batch_dir = f'{output_dir}/batch_{i+1}'
+		batch_dir = f'{output_dir}/batch_{batch}'
 		os.makedirs(batch_dir, exist_ok=True)
 
-		for j in range(batch_size):
-			if i * batch_size + j >= len(subdir):
-				break
-			src = subdir[i * batch_size + j]
-			dst = os.path.join(batch_dir, os.path.basename(src))
-			shutil.copytree(src, dst, dirs_exist_ok=True)
-			print(f"Copied {src} to {dst}")
+		src = subdir[i]
+		dst = os.path.join(batch_dir, os.path.basename(src))
+		shutil.copytree(src, dst, dirs_exist_ok=True)
+		print(f"Copied {src} to {dst}")
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description='')
