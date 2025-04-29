@@ -216,8 +216,7 @@ def main(directory, csv_metadata, pattern_header):
         reader=csv.DictReader(csv_file, delimiter="\t")
 
         for row in reader:
-            print(row)
-            print(f'Traitement de {row["file_name"]}')
+            print(f'Parsing {row["file_name"]}')
             root_xml = ET.Element("TEI", xmlns="http://www.tei-c.org/ns/1.0")
             if pattern_header:
                 tei_header = fill_header(pattern_header, row)
@@ -239,16 +238,21 @@ def main(directory, csv_metadata, pattern_header):
                         n+=1
                 liste_block.append("</div></body></text>")
                 block_str = "".join(liste_block)
-                block_tei = ET.fromstring(block_str)
-                root_xml.append(block_tei)
                 output=os.path.basename(row["file_name"])
-                with open(f'TEI/{output}.xml', "w") as f:
-                    f.write(ET.tostring(root_xml, encoding='unicode', pretty_print=True))
+                try:
+                    block_tei = ET.fromstring(block_str)
+                    root_xml.append(block_tei)
+                    with open(f'TEI/{output}.xml', "w") as f:
+                        f.write(ET.tostring(root_xml, encoding='unicode', pretty_print=True))
+                except Exception as e:
+                    print(f"Error: {e}")
+                    print(f"Writing block to file TEI/error/{output}.xml")
+                    if not os.path.exists('TEI/error/'):
+                        os.makedirs('TEI/error/')
+                    with open(f'TEI/error/{output}.xml', "w") as f:
+                        f.write(block_str)
             except KeyError:
                 print(f"Error: {row['file_name']} not found in subdirs.")
 
-
-
-        
 if __name__ == "__main__":
     main()
