@@ -4,6 +4,7 @@ from lxml import etree as ET
 from datetime import datetime
 import csv
 import re
+from glob import glob
 
 tei_mapping = {
     "AdvertisementZone": """<fw type="ad">""",
@@ -204,15 +205,15 @@ def update_block(liste_block, tag, liste_line, continued, cumul, is_list, zone_t
 
     
 @click.command()
+@click.argument('directory', type=str)
 @click.argument('csv_metadata', type=str)
 @click.argument('pattern_header', type=str, required=False)
-def main(csv_metadata, pattern_header):
+def main(directory, csv_metadata, pattern_header):
     if not os.path.exists('TEI'):
         os.makedirs('TEI')
     xslt_file = "resources/alto2XMLsimple.xsl"
     with open(csv_metadata, newline='', encoding="utf-8") as csv_file:
         reader=csv.DictReader(csv_file, delimiter="\t")
-
 
         for row in reader:
             print(row)
@@ -226,17 +227,28 @@ def main(csv_metadata, pattern_header):
             root_xml.append(ET.fromstring(tei_header))
             liste_block = ["<text><body><div>"]
             n = 0
-            for xml_file in sorted(os.listdir(row["file_name"])):
-                if 'xml' in xml_file and 'METS' not in xml_file:
-                    liste_block = process_document(row['file_name'], xml_file, liste_block, xslt_file, n)
-                    n+=1
-            liste_block.append("</div></body></text>")
-            block_str = "".join(liste_block)
-            block_tei = ET.fromstring(block_str)
-            root_xml.append(block_tei)
-            output=os.path.basename(row["file_name"])
-            with open(f'TEI/{output}.xml', "w") as f:
-                f.write(ET.tostring(root_xml, encoding='unicode', pretty_print=True))
+
+            subdirs = glob(os.path.join(directory, "**/"), recursive = True)
+            subdirs = {os.path.basename(os.path.normpath(d)): d for d in subdirs}
+
+            try:
+                fulldir = subdirs[row["file_name"]]
+                for xml_file in sorted(os.listdir(fulldir)):
+                    if 'xml' in xml_file and 'METS' not in xml_file:
+                        liste_block = process_document(fulldir, xml_file, liste_block, xslt_file, n)
+                        n+=1
+                liste_block.append("</div></body></text>")
+                block_str = "".join(liste_block)
+                block_tei = ET.fromstring(block_str)
+                root_xml.append(block_tei)
+                output=os.path.basename(row["file_name"])
+                with open(f'TEI/{output}.xml', "w") as f:
+                    f.write(ET.tostring(root_xml, encoding='unicode', pretty_print=True))
+            except KeyError:
+                print(f"Error: {row['file_name']} not found in subdirs.")
+
+
+
         
 if __name__ == "__main__":
     main()
