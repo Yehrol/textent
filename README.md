@@ -27,7 +27,7 @@ positional arguments:
 
 ## 2. Segmentation + OCR
 
-### Single batch processing
+### A. Single batch processing
 
 - even if you are not using multiple batch processing, you must provide a batch index. for example, you can rename your books folder to `batch_1`
 
@@ -52,7 +52,7 @@ positional arguments:
   LMDL        line model
 ```
 
-### Multiple batch processing (Slurm cluster)
+### B. Multiple batch processing (Slurm cluster)
 
 - Modify 2-rtk-cpu-batch.sh
   - array: change according to the number of batch made with 1-batch.py
