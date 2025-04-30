@@ -19,7 +19,7 @@ import argparse
 
 start = time.time()
 
-parser = argparse.ArgumentParser(description='Download books from a metadata file.')
+parser = argparse.ArgumentParser(description='Applies RTK to a set of images')
 parser.add_argument('base', metavar='BASE', type=str, help='base folder name')
 parser.add_argument('batch', metavar='BATCH', type=str, help='batch index')
 parser.add_argument('kraken_model', metavar='KMDL', type=str, help='kraken model')
